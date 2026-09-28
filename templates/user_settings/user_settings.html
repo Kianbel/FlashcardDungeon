@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings - Flashcard Dungeon</title>
+    <style>
+        /* Shared Styles */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
+        :root { --brand-yellow: #f7d554; --brand-orange: #e78c5b; }
+        body {
+            background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg");
+            background-repeat: no-repeat; background-position: center; background-size: cover; background-attachment: fixed;
+            color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0;
+        }
+        /* Navbar */
+        .guild-nav { background: rgba(10, 10, 15, 0.9); border-bottom: 2px solid var(--brand-yellow); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2rem; margin: 0; }
+        .nav-links a { color: #ece8c2; text-decoration: none; margin-left: 20px; font-weight: 600; text-transform: uppercase; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--brand-yellow); }
+
+        /* Settings Box */
+        .container { max-width: 500px; margin: 50px auto; padding: 0 20px; }
+        .rpg-box {
+            background: rgba(20, 20, 28, 0.85); border: 2px solid var(--brand-yellow); border-radius: 12px;
+            padding: 40px; box-shadow: 0 0 30px rgba(184, 151, 88, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        h2 { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2.5rem; text-align: center; margin-top: 0; }
+        
+        /* Form Styles (Inherited from Login/Register) */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { font-size: 0.85rem; color: var(--brand-yellow); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+        input { width: 100%; padding: 12px; margin-top: 8px; background: #0a0a0f; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; box-sizing: border-box; transition: all 0.3s ease; }
+        input:focus { outline: none; border-color: var(--brand-yellow); box-shadow: 0 0 12px rgba(184, 151, 88, 0.3); background: #111118; }
+        
+        button {
+            width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(to bottom, #e78c5b, var(--brand-yellow));
+            border: 1px solid #eedc9a; border-radius: 6px; color: #0a0a0f; font-family: 'VT323', monospace; font-size: 1.5rem;
+            cursor: pointer; text-transform: uppercase; transition: all 0.2s ease;
+        }
+        button:hover { box-shadow: 0 0 20px rgba(184, 151, 88, 0.5); transform: translateY(-2px); }
+        
+        .danger-zone { margin-top: 40px; border-top: 1px dashed #e78c5b; padding-top: 20px; }
+        .danger-zone button { background: #0a0a0f; color: #e78c5b; border-color: #e78c5b; }
+        .danger-zone button:hover { background: rgba(231, 140, 91, 0.1); box-shadow: 0 0 20px rgba(231, 140, 91, 0.3); }
+    </style>
+</head>
+<body>
+    <nav class="guild-nav">
+        <h1 class="nav-logo">Flashcard Dungeon</h1>
+        <div class="nav-links">
+            <a href="{% url 'home:home' %}">Dashboard</a>
+            <a href="{% url 'profiles:profiles' %}">Profile</a>
+            <a href="{% url 'user_settings:user_settings' %}">Settings</a>
+            <a href="{% url 'login:login' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="rpg-box">
+            <h2>Account Settings</h2>
+            
+            {% if messages %}
+                <p style="color: #4CAF50; font-weight: bold; text-align: center;">Settings updated successfully!</p>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Change Adventurer Name</label>
+                    <input type="text" name="username" value="{{ user.username }}" placeholder="Update username...">
+                </div>
+                
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" placeholder="Leave blank to keep current...">
+                </div>
+                
+                <button type="submit">Update Ledger</button>
+            </form>
+
+            <div class="danger-zone">
+                <h3 style="color: var(--brand-orange); font-family: 'VT323', monospace; font-size: 1.5rem; margin-top:0;">Danger Zone</h3>
+                <form method="post" action="/">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete your profile? All dungeon progress will be lost.')">Retire from Guild (Delete Account)</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

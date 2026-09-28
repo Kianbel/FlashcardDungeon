@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - Flashcard Dungeon</title>
+    <style>
+        /* Shared Styles */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
+        :root { --brand-yellow: #f7d554; --brand-orange: #e78c5b; }
+        body {
+            background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg");
+            background-repeat: no-repeat; background-position: center; background-size: cover; background-attachment: fixed;
+            color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0;
+        }
+        /* Navbar (Same as Home) */
+        .guild-nav { background: rgba(10, 10, 15, 0.9); border-bottom: 2px solid var(--brand-yellow); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2rem; margin: 0; }
+        .nav-links a { color: #ece8c2; text-decoration: none; margin-left: 20px; font-weight: 600; text-transform: uppercase; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--brand-yellow); }
+
+        /* Profile Specific */
+        .container { max-width: 800px; margin: 40px auto; display: grid; gap: 30px; padding: 0 20px; }
+        .rpg-box {
+            background: rgba(20, 20, 28, 0.85); border: 2px solid var(--brand-yellow); border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 30px rgba(184, 151, 88, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        h2 { font-family: 'VT323', monospace; color: var(--brand-orange); font-size: 2.5rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed #333; padding-bottom: 8px;}
+        .stat-label { color: var(--brand-yellow); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Titles Grid */
+        .titles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+        .title-badge { background: #111118; border: 1px solid #333; padding: 10px; text-align: center; border-radius: 6px; font-family: 'VT323', monospace; font-size: 1.2rem; color: #8c8c9e;}
+        .title-badge.unlocked { border-color: var(--brand-yellow); color: var(--brand-yellow); background: rgba(247, 213, 84, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="guild-nav">
+        <h1 class="nav-logo">Flashcard Dungeon</h1>
+        <div class="nav-links">
+            <a href="{% url 'home:home' %}">Dashboard</a>
+            <a href="{% url 'profiles:profiles' %}">Profile</a>
+            <a href="{% url 'user_settings:user_settings' %}">Settings</a>
+            <a href="{% url 'login:login' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="rpg-box">
+            <h2>Adventurer Stats</h2>
+            <div class="stat-row">
+                <span class="stat-label">Total Enemies Defeated (Recalls)</span>
+                <span>{{ user.profile.total_recalls|default:"0" }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Total XP</span>
+                <span>{{ user.profile.xp|default:"0" }} XP</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Dungeons Conquered</span>
+                <span>{{ user.profile.dungeons_cleared|default:"0" }}</span>
+            </div>
+        </div>
+
+        <div class="rpg-box">
+            <h2>Unlocked Titles</h2>
+            <p style="color: #8c8c9e; font-size: 0.9rem;">Gain XP to unlock exclusive titles!</p>
+            <div class="titles-grid">
+                <div class="title-badge unlocked">Novice Explorer</div>
+                <div class="title-badge unlocked">Goblin Slayer</div>
+                <div class="title-badge">Memory Mage</div>
+                <div class="title-badge">Dungeon Master</div>
+                <div class="title-badge">???</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
