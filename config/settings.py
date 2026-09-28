@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "apps.home",
     "apps.profiles",
     "apps.user_settings",
+    "apps.dungeon",
 
 ]
 
