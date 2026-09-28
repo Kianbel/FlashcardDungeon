@@ -35,6 +35,10 @@
         .titles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
         .title-badge { background: #111118; border: 1px solid #333; padding: 10px; text-align: center; border-radius: 6px; font-family: 'VT323', monospace; font-size: 1.2rem; color: #8c8c9e;}
         .title-badge.unlocked { border-color: var(--brand-yellow); color: var(--brand-yellow); background: rgba(247, 213, 84, 0.1); }
+
+        /* Progress Bar */
+        .progress-container { width: 100%; background: #111118; border: 1px solid #333; border-radius: 8px; overflow: hidden; margin-top: 10px; height: 20px; }
+        .progress-bar { height: 100%; background: var(--brand-orange); transition: width 0.5s ease-in-out; }
     </style>
 </head>
 <body>
@@ -56,10 +60,14 @@
                 <!-- Updated to match models.py -->
                 <span>{{ user.profile.total_cards_memorized|default:"0" }}</span>
             </div>
-            <div class="stat-row">
-                <span class="stat-label">Total XP</span>
-                <!-- Updated to match models.py -->
-                <span>{{ user.profile.current_xp|default:"0" }} XP</span>
+            <div class="stat-row" style="flex-direction: column; border-bottom: 1px dashed #333; padding-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <span class="stat-label">Level {{ user.profile.level }} Progress</span>
+                    <span>{{ user.profile.current_xp }} / {{ xp_needed }} XP</span>
+                </div>
+                <div class="progress-container" style="--dynamic-width: {{ progress_percent }}%;">
+                    <div class="progress-bar" style="width: var(--dynamic-width);"></div>
+                </div>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Dungeons Conquered</span>

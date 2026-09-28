@@ -3,56 +3,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Combat - {{ session.deck.name }}</title>
+    <title>Dungeon Cleared - Flashcard Dungeon</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
-        :root { --brand-yellow: #f7d554; --brand-orange: #e78c5b; --bg-dark: #0a0a0f; }
-        body { background: var(--bg-dark); color: #e0e0e0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        
-        .combat-arena { width: 500px; background: rgba(20, 20, 28, 0.95); border: 2px solid #555; border-radius: 12px; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .stats-bar { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 1.5rem; display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px dashed #333; padding-bottom: 10px; }
-        
-        .card-display { min-height: 200px; display: flex; align-items: center; justify-content: center; background: #111118; border: 1px solid var(--brand-orange); border-radius: 8px; margin-bottom: 30px; padding: 20px; font-size: 1.2rem; line-height: 1.6; }
-        
-        .btn { width: 100%; padding: 15px; font-family: 'VT323', monospace; font-size: 1.8rem; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
-        .btn-reveal { background: var(--brand-yellow); color: #000; }
-        
-        .action-buttons { display: none; gap: 15px; } /* Hidden until revealed */
-        .btn-kill { background: #4CAF50; color: white; flex: 1; }
-        .btn-run { background: #e78c5b; color: #000; flex: 1; }
+        body { 
+            background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg"); 
+            background-size: cover; 
+            background-attachment: fixed;
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .results-box { 
+            background: rgba(20, 20, 28, 0.95); 
+            border: 2px solid #f7d554; 
+            border-radius: 12px; 
+            padding: 40px; 
+            width: 450px; 
+            text-align: center;
+            box-shadow: 0 0 30px rgba(184, 151, 88, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        h1 { 
+            font-family: 'VT323', monospace; 
+            color: #f7d554; 
+            font-size: 4rem; 
+            margin: 0 0 10px 0; 
+        }
+        .xp-gain { 
+            font-family: 'VT323', monospace; 
+            color: #4CAF50; 
+            font-size: 3rem; 
+            margin: 20px 0; 
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+        }
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            text-align: left; 
+            background: #111118; 
+            padding: 20px; 
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .stat-grid strong { 
+            color: #e78c5b; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+        }
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(to bottom, #e78c5b, #f7d554); 
+            color: #0a0a0f; 
+            font-family: 'VT323', monospace; 
+            font-size: 1.8rem; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            box-sizing: border-box;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(247, 213, 84, 0.3);
+        }
     </style>
 </head>
 <body>
-    <div class="combat-arena">
-        <div class="stats-bar">
-            <span>⚔️ Killed: {{ session.enemies_killed }}</span>
-            <span>🏃 Fled: {{ session.times_ran_away }}</span>
+    <div class="results-box">
+        <h1>Dungeon Cleared!</h1>
+        <p style="color: #8c8c9e; font-size: 1.2rem; margin-top: 0;">{{ session.deck.name }}</p>
+        
+        <div class="xp-gain">+{{ session.xp_earned }} XP</div>
+        
+        <div class="stat-grid">
+            <div>
+                <strong>Enemies Slain</strong>
+                <div style="font-size: 2rem; font-family: 'VT323', monospace; color: #f7d554;">{{ session.enemies_killed }}</div>
+            </div>
+            <div>
+                <strong>Times Fled</strong>
+                <div style="font-size: 2rem; font-family: 'VT323', monospace; color: #f7d554;">{{ session.times_ran_away }}</div>
+            </div>
         </div>
-
-        <div class="card-display" id="cardText">
-            {{ card.front_text }}
-        </div>
-
-        <button class="btn btn-reveal" id="revealBtn" onclick="revealWeakness()">Expose Weakness (Flip)</button>
-
-        <form method="post" class="action-buttons" id="actionForm">
-            {% csrf_token %}
-            <button type="submit" name="action" value="kill" class="btn btn-kill">Strike (I knew it)</button>
-            <button type="submit" name="action" value="run" class="btn btn-run">Flee (I forgot)</button>
-        </form>
+        
+        <a href="{% url 'home:home' %}" class="btn">Return to Guild</a>
     </div>
-
-    <script>
-        function revealWeakness() {
-            // Swap the text to the back of the card
-            document.getElementById('cardText').innerHTML = `
-                <span style="color: var(--brand-orange); font-size: 0.9rem; display: block; margin-bottom: 10px;">WEAKNESS:</span>
-                {{ card.back_text|escapejs }}
-            `;
-            // Hide the reveal button and show combat choices
-            document.getElementById('revealBtn').style.display = 'none';
-            document.getElementById('actionForm').style.display = 'flex';
-        }
-    </script>
 </body>
 </html>
