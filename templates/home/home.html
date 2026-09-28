@@ -161,7 +161,7 @@
             <div class="player-title">
                 <!-- Using standard Django template variables -->
                 <h2>{{ user.username|default:"Adventurer" }}</h2>
-                <p>Title: {{ user.profile.title|default:"Novice Explorer" }}</p>
+                <p>Title: {{ user.profile.equipped_title.name|default:"Novice Explorer" }}</p>
             </div>
             <div class="player-level">
                 <p style="margin:0; color: #8c8c9e; font-weight:600; text-transform:uppercase;">Level</p>

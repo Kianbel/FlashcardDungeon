@@ -72,11 +72,11 @@
             <h2>Unlocked Titles</h2>
             <p style="color: #8c8c9e; font-size: 0.9rem;">Gain XP to unlock exclusive titles!</p>
             <div class="titles-grid">
-                <div class="title-badge unlocked">Novice Explorer</div>
-                <div class="title-badge unlocked">Goblin Slayer</div>
-                <div class="title-badge">Memory Mage</div>
-                <div class="title-badge">Dungeon Master</div>
-                <div class="title-badge">???</div>
+                {% for title in user.profile.unlocked_titles.all %}
+                    <div class="title-badge unlocked" title="{{ title.description }}">{{ title.name }}</div>
+                {% empty %}
+                    <p style="color: #8c8c9e; font-size: 0.9rem; grid-column: 1 / -1;">No titles unlocked yet. Keep running dungeons to level up!</p>
+                {% endfor %}
             </div>
         </div>
     </div>

@@ -62,7 +62,14 @@
         </div>
 
         <div>
-            <a href="#" class="start-run button" style="padding: 15px; font-family: 'VT323', monospace; font-size: 2rem; border-radius: 8px;">Begin Adventure Run</a>
+            {% if messages %}
+                <div style="background: var(--brand-orange); color: #0a0a0f; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center;">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <a href="{% url 'dungeon:start_run' deck.pk %}" class="start-run button" style="padding: 15px; font-family: 'VT323', monospace; font-size: 2rem; border-radius: 8px;">Begin Adventure Run</a>
             
             <div class="rpg-box">
                 <h3 style="font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 1.8rem; margin-top: 0;">Spawn Enemy</h3>
