@@ -1,30 +1,36 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 
-# Mock classes (you need them here too so the template doesn't crash)
-class MockProfile:
-    def __init__(self):
-        self.title = "Dungeon Master"
-        self.level = 42
-
-class MockUser:
-    def __init__(self):
-        self.username = "FlashcardHero"
-        self.profile = MockProfile()
-
+@login_required
 def settings_view(request):
-    """Renders the settings page and fakes a form submission."""
-    dummy_user = MockUser()
-    
     if request.method == 'POST':
-        messages.success(request, 'Settings updated successfully! (Mocked)')
+        new_username = request.POST.get('username')
+        new_password = request.POST.get('new_password')
+        
+        # Update username if it was changed and isn't taken
+        if new_username and new_username != request.user.username:
+            request.user.username = new_username
+            request.user.save()
+            
+        # Update password if the user typed one in
+        if new_password:
+            request.user.set_password(new_password)
+            request.user.save()
+            # This prevents the user from being logged out after a password change
+            update_session_auth_hash(request, request.user) 
+            
+        messages.success(request, 'Ledger updated successfully!')
         return redirect('user_settings:user_settings')
 
-    return render(request, 'user_settings/user_settings.html', {'user': dummy_user})
+    # We no longer need the mock user; Django automatically provides request.user to templates
+    return render(request, 'user_settings/user_settings.html')
 
+@login_required
 def delete_account_view(request):
-    """Simulates the account deletion route."""
     if request.method == 'POST':
+        request.user.delete() # This cascades and deletes the Profile, Settings, and Dungeons
         return redirect('login:login') 
         
     return redirect('user_settings:user_settings')

@@ -53,15 +53,18 @@
             <h2>Adventurer Stats</h2>
             <div class="stat-row">
                 <span class="stat-label">Total Enemies Defeated (Recalls)</span>
-                <span>{{ user.profile.total_recalls|default:"0" }}</span>
+                <!-- Updated to match models.py -->
+                <span>{{ user.profile.total_cards_memorized|default:"0" }}</span>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Total XP</span>
-                <span>{{ user.profile.xp|default:"0" }} XP</span>
+                <!-- Updated to match models.py -->
+                <span>{{ user.profile.current_xp|default:"0" }} XP</span>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Dungeons Conquered</span>
-                <span>{{ user.profile.dungeons_cleared|default:"0" }}</span>
+                <!-- Pulls the count of related StudySessions dynamically -->
+                <span>{{ user.study_sessions.count|default:"0" }}</span>
             </div>
         </div>
 

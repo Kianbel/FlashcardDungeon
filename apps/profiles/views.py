@@ -1,20 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
-# Mock classes to fake the database
-class MockProfile:
-    def __init__(self):
-        self.title = "Dungeon Master"
-        self.level = 42
-        self.total_recalls = 1337
-        self.xp = 8500
-        self.dungeons_cleared = 12
-
-class MockUser:
-    def __init__(self):
-        self.username = "FlashcardHero"
-        self.profile = MockProfile()
-
+@login_required
 def profile_view(request):
-    """Renders the profile page with fake data."""
-    dummy_user = MockUser()
-    return render(request, 'profiles/profiles.html', {'user': dummy_user})
+    # request.user is passed automatically to the template by Django's context processors
+    return render(request, 'profiles/profiles.html')
