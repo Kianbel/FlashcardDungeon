@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forge Dungeon - Flashcard Dungeon</title>
+    <!-- Use your existing login CSS to keep the RPG box styling -->
+    <link rel="stylesheet" href="{% static 'css/login/login.css' %}">
+    <style>
+        /* Shared Styles imported from your other templates */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
+        :root { --brand-yellow: #f7d554; }
+        body {
+            background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg");
+            background-size: cover; background-attachment: fixed;
+            color: #e0e0e0; font-family: 'Inter', sans-serif;
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+        }
+        .rpg-box {
+            background: rgba(20, 20, 28, 0.85); border: 2px solid var(--brand-yellow); border-radius: 12px;
+            padding: 40px; width: 400px; box-shadow: 0 0 30px rgba(184, 151, 88, 0.15); backdrop-filter: blur(5px);
+        }
+        h1 { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 3rem; margin: 0 0 20px 0; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { font-size: 0.85rem; color: var(--brand-yellow); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 8px; background: #0a0a0f; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        input:focus, textarea:focus { outline: none; border-color: var(--brand-yellow); }
+        button { width: 100%; padding: 14px; background: linear-gradient(to bottom, #e78c5b, var(--brand-yellow)); border: 1px solid #eedc9a; border-radius: 6px; color: #0a0a0f; font-family: 'VT323', monospace; font-size: 1.8rem; cursor: pointer; text-transform: uppercase; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--brand-yellow); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="rpg-box">
+        <h1>Forge New Dungeon</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Dungeon Name</label>
+                <input type="text" name="name" placeholder="e.g. Data Structures" required>
+            </div>
+            <div class="form-group">
+                <label>Description (Optional)</label>
+                <textarea name="description" rows="3" placeholder="What horrors await inside?"></textarea>
+            </div>
+            <button type="submit">Establish Dungeon</button>
+        </form>
+        <a href="{% url 'home:home' %}" class="back-link">Return to Guild</a>
+    </div>
+</body>
+</html>

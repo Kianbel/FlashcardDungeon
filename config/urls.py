@@ -23,5 +23,6 @@ urlpatterns = [
     path("register/", include("apps.register.urls")),
     path("profiles/", include("apps.profiles.urls")),
     path("user_settings/", include("apps.user_settings.urls")),
+    path("dungeon/", include("apps.dungeon.urls")),
     path("", include("apps.home.urls")),
 ]

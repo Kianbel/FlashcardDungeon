@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ deck.name }} - Flashcard Dungeon</title>
+    <!-- Use your home CSS for the nav bar -->
+    <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
+        :root { --brand-yellow: #f7d554; --brand-orange: #e78c5b; }
+        body { background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg"); background-size: cover; background-attachment: fixed; color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; }
+        .guild-nav { background: rgba(10, 10, 15, 0.9); border-bottom: 2px solid var(--brand-yellow); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2rem; margin: 0; }
+        .nav-links a { color: #ece8c2; text-decoration: none; margin-left: 20px; font-weight: 600; text-transform: uppercase; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+        .rpg-box { background: rgba(20, 20, 28, 0.85); border: 2px solid var(--brand-yellow); border-radius: 12px; padding: 30px; backdrop-filter: blur(5px); }
+        h2 { font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2.5rem; margin-top: 0; }
+        
+        /* Card Layout */
+        .enemy-list { display: flex; flex-direction: column; gap: 15px; }
+        .enemy-card { background: #0a0a0f; border: 1px solid #333; padding: 15px; border-radius: 8px; border-left: 4px solid var(--brand-orange); }
+        .enemy-card strong { color: var(--brand-orange); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.85rem;}
+        
+        /* Form */
+        label { font-size: 0.85rem; color: var(--brand-yellow); font-weight: 600; text-transform: uppercase; }
+        textarea { width: 100%; padding: 10px; margin: 8px 0 15px; background: #0a0a0f; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; box-sizing: border-box; resize: vertical;}
+        button { width: 100%; padding: 12px; background: linear-gradient(to bottom, #e78c5b, var(--brand-yellow)); border: 1px solid #eedc9a; border-radius: 6px; font-family: 'VT323', monospace; font-size: 1.5rem; cursor: pointer; text-transform: uppercase; }
+        .start-run { background: #4CAF50; color: white; border-color: #45a049; margin-bottom: 20px; text-align: center; text-decoration: none; display: block; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <nav class="guild-nav">
+        <h1 class="nav-logo">Flashcard Dungeon</h1>
+        <div class="nav-links">
+            <a href="{% url 'home:home' %}">Dashboard</a>
+            <a href="{% url 'profiles:profiles' %}">Profile</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div>
+            <div class="rpg-box" style="margin-bottom: 20px;">
+                <h2>{{ deck.name }}</h2>
+                <p style="color: #8c8c9e;">{{ deck.description|default:"No description provided." }}</p>
+                <p style="font-family: 'VT323', monospace; font-size: 1.5rem;">Enemy Count: {{ deck.cards.count }}</p>
+            </div>
+            
+            <h3 style="font-family: 'VT323', monospace; color: var(--brand-orange); font-size: 2rem;">Bestiary (Cards)</h3>
+            <div class="enemy-list">
+                {% for card in deck.cards.all %}
+                    <div class="enemy-card">
+                        <strong>Monster (Front):</strong> {{ card.front_text }}
+                        <hr style="border: 0; border-top: 1px dashed #333; margin: 10px 0;">
+                        <strong>Weakness (Back):</strong> {{ card.back_text }}
+                    </div>
+                {% empty %}
+                    <p style="color: #8c8c9e; font-style: italic;">The dungeon is empty. Spawn some enemies!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <a href="#" class="start-run button" style="padding: 15px; font-family: 'VT323', monospace; font-size: 2rem; border-radius: 8px;">Begin Adventure Run</a>
+            
+            <div class="rpg-box">
+                <h3 style="font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 1.8rem; margin-top: 0;">Spawn Enemy</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <label>Monster (Question)</label>
+                    <textarea name="front_text" rows="2" required></textarea>
+                    
+                    <label>Weakness (Answer)</label>
+                    <textarea name="back_text" rows="2" required></textarea>
+                    
+                    <button type="submit">Add to Dungeon</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -172,26 +172,22 @@
         <!-- Deck / Dungeon Grid -->
         <h2 style="font-family: 'VT323', monospace; color: var(--brand-yellow); font-size: 2rem;">Available Dungeons</h2>
         <div class="dungeon-grid">
-            
-            <!-- Example Deck 1 -->
-            <div class="dungeon-card" onclick="location.href='#'">
+            {% for deck in decks %}
+            <!-- Changed to an anchor tag -->
+            <a href="{% url 'dungeon:dungeon_detail' deck.pk %}" class="dungeon-card" style="text-decoration: none; display: block;">
                 <div class="dungeon-icon">🦇</div>
-                <h3 class="dungeon-name">Data Structures</h3>
-                <p style="font-size: 0.85rem; color: #8c8c9e;">Cards: 42 | Mastery: 30%</p>
-            </div>
+                <h3 class="dungeon-name">{{ deck.name }}</h3>
+                <p style="font-size: 0.85rem; color: #8c8c9e;">Enemies: {{ deck.cards.count }}</p>
+            </a>
+            {% empty %}
+                <p style="color: #8c8c9e; grid-column: 1 / -1;">You haven't forged any dungeons yet.</p>
+            {% endfor %}
 
-            <!-- Example Deck 2 -->
-            <div class="dungeon-card" onclick="location.href='#'">
-                <div class="dungeon-icon">💀</div>
-                <h3 class="dungeon-name">Algorithms</h3>
-                <p style="font-size: 0.85rem; color: #8c8c9e;">Cards: 15 | Mastery: 80%</p>
-            </div>
-
-            <!-- Create New Deck Button -->
-            <div class="dungeon-card add-dungeon" onclick="location.href='#'">
-                <div style="font-size: 3rem; margin-bottom: 10px;">+</div>
-                <h3 style="font-family: 'VT323', monospace; font-size: 1.5rem; margin: 0;">Forge New Dungeon</h3>
-            </div>
+            <!-- Changed to an anchor tag -->
+            <a href="{% url 'dungeon:forge_dungeon' %}" class="dungeon-card add-dungeon" style="text-decoration: none;">
+                <div style="font-size: 3rem; margin-bottom: 10px; color: inherit;">+</div>
+                <h3 style="font-family: 'VT323', monospace; font-size: 1.5rem; margin: 0; color: inherit;">Forge New Dungeon</h3>
+            </a>
 
         </div>
     </div>
