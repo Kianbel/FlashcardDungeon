@@ -78,6 +78,19 @@
                     <p style="color: #8c8c9e; font-size: 0.9rem; grid-column: 1 / -1;">No titles unlocked yet. Keep running dungeons to level up!</p>
                 {% endfor %}
             </div>
+
+            <form method="post" action="{% url 'profiles:equip_title' %}" style="margin-bottom: 20px; display: flex; gap: 10px;">
+                {% csrf_token %}
+                <select name="title_id" style="padding: 10px; background: #0a0a0f; color: #f7d554; border: 1px solid #333; font-family: 'VT323', monospace; font-size: 1.2rem;">
+                    <option value="">-- Select a Title to Equip --</option>
+                    {% for title in user.profile.unlocked_titles.all %}
+                        <option value="{{ title.id }}" {% if user.profile.equipped_title.id == title.id %}selected{% endif %}>
+                            {{ title.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" style="padding: 10px 20px; background: #f7d554; border: none; font-family: 'VT323', monospace; font-size: 1.2rem; cursor: pointer;">Equip</button>
+            </form>
         </div>
     </div>
 </body>

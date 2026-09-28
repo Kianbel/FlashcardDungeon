@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
+from apps.profiles.models import Profile
 
 # Ensure ALL models used in this file are imported here
 from .models import Deck, Card, StudySession, CardReview
@@ -52,30 +53,35 @@ def start_run_view(request, deck_id):
 def review_run_view(request, session_id):
     session = get_object_or_404(StudySession, pk=session_id, user=request.user)
     
+    # SAFETY CATCH: If the session already finished (like from a previous crash), immediately route to the loot screen.
+    if session.ended_at:
+        return redirect('dungeon:run_results', session_id=session.pk)
+    
     # Querying CardReview directly avoids Pylance errors on session.reviews
     reviewed_card_ids = CardReview.objects.filter(session=session).values_list('card_id', flat=True)
     
     # Querying Card directly avoids Pylance errors on session.deck.cards
     next_card = Card.objects.filter(deck=session.deck).exclude(id__in=reviewed_card_ids).first()
     
-    # If no cards are left, the dungeon is clear
+    # If no cards are left, finalize the dungeon
     if not next_card:
-        if not session.ended_at:
-            session.ended_at = timezone.now()
-            
-            # Calculate XP (e.g., 15 XP per successful recall)
-            xp_gained = session.enemies_killed * 15
-            session.xp_earned = xp_gained
-            session.save()
-            
-            # Apply XP and stats to the user's Profile
-            profile = request.user.profile
-            profile.total_cards_memorized += session.enemies_killed
-            profile.add_xp(xp_gained)
-            profile.save()
+        session.ended_at = timezone.now()
+        
+        # Calculate XP (e.g., 15 XP per successful recall)
+        xp_gained = session.enemies_killed * 15
+        session.xp_earned = xp_gained
+        session.save()
+        
+        # Safely fetch or create the profile
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        
+        profile.total_cards_memorized += session.enemies_killed
+        profile.add_xp(xp_gained)
+        profile.save()
             
         return redirect('dungeon:run_results', session_id=session.pk)
 
+    # Process the combat action
     if request.method == 'POST':
         action = request.POST.get('action') # Expected values: 'kill' or 'run'
         is_successful = (action == 'kill')
