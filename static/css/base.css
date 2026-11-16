@@ -165,3 +165,22 @@ a:hover { color: #eedc9a; }
 .enemy-card .weak { color: #cfe8cf; }
 .side-stack { display: flex; flex-direction: column; gap: 20px; }
 .side-title { color: var(--gold); font-size: 1.8rem; margin: 0 0 14px; }
+
+/* ---------- Profile ---------- */
+.stack { display: grid; gap: 28px; max-width: 800px; margin: 0 auto; }
+.stack h2 { color: var(--orange); font-size: 2.4rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin: 0 0 18px; }
+.stat-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px dashed #333; }
+.stat-label { color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.titles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; margin: 18px 0; }
+.title-badge { background: #111118; border: 1px solid #333; padding: 10px; text-align: center; border-radius: 4px; font-family: 'VT323', monospace; font-size: 1.3rem; color: var(--muted); }
+.title-badge.unlocked { border-color: var(--gold); color: var(--gold); background: rgba(247, 213, 84, 0.08); }
+.title-badge.equipped { box-shadow: 0 0 12px rgba(247, 213, 84, 0.5); }
+.equip-form { display: flex; gap: 10px; margin-top: 10px; }
+.equip-form select { flex: 1; padding: 10px; background: #0a0a0f; color: var(--gold); border: 2px solid #333; border-radius: 4px; font-family: 'VT323', monospace; font-size: 1.2rem; }
+.equip-form .btn { width: auto; font-size: 1.3rem; padding: 8px 22px; }
+
+/* ---------- Settings danger zone ---------- */
+.danger-zone { margin-top: 36px; border-top: 2px dashed var(--orange); padding-top: 20px; }
+.danger-zone h3 { color: var(--orange); font-size: 1.6rem; margin: 0 0 12px; }
+.btn-danger { background: #0a0a0f; color: var(--orange); border-color: var(--orange); box-shadow: none; }
+.btn-danger:hover { background: rgba(231, 140, 91, 0.12); box-shadow: 0 0 18px rgba(231, 140, 91, 0.35); }
