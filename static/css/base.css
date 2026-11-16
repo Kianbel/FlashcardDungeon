@@ -1,0 +1,117 @@
+:root {
+    --gold: #f7d554;
+    --orange: #e78c5b;
+    --green: #4CAF50;
+    --red: #c0392b;
+    --bg-dark: #0a0a0f;
+    --panel: rgba(20, 20, 28, 0.88);
+    --muted: #8c8c9e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* dark vignette so the dungeon feels torch-lit */
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+body > * { position: relative; z-index: 1; }
+
+h1, h2, h3, .pixel { font-family: 'VT323', monospace; font-weight: normal; }
+
+/* ---------- Navigation ---------- */
+.guild-nav {
+    background: rgba(10, 10, 15, 0.92);
+    border-bottom: 3px solid var(--gold);
+    padding: 12px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px;
+}
+.nav-logo { color: var(--gold); font-size: 2rem; margin: 0; text-shadow: 2px 2px 0 #000; }
+.nav-logo a { color: inherit; text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: 22px; }
+.nav-links a, .nav-links button {
+    color: #ece8c2; text-decoration: none; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
+    background: none; border: none; cursor: pointer; font-family: inherit; padding: 0;
+}
+.nav-links a:hover, .nav-links button:hover { color: var(--gold); }
+
+/* ---------- Layout ---------- */
+.container { max-width: 1000px; margin: 35px auto; padding: 0 20px; }
+.page-center { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+/* ---------- RPG panel: chunky pixel-style border ---------- */
+.rpg-box {
+    background: var(--panel);
+    border: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 28px;
+    box-shadow: 0 0 0 3px #000, 0 0 30px rgba(247, 213, 84, 0.18), inset 0 0 25px rgba(0,0,0,0.8);
+    backdrop-filter: blur(4px);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-block; width: 100%;
+    padding: 12px 18px; text-align: center; text-decoration: none; cursor: pointer;
+    font-family: 'VT323', monospace; font-size: 1.6rem; text-transform: uppercase;
+    color: #0a0a0f; border: 2px solid #000; border-radius: 4px;
+    background: linear-gradient(to bottom, var(--orange), var(--gold));
+    box-shadow: 0 4px 0 #7a5a1e;
+    transition: transform .1s, box-shadow .1s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #7a5a1e; }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #7a5a1e; }
+.btn-green { background: linear-gradient(to bottom, #66bb6a, var(--green)); box-shadow: 0 4px 0 #2e6b31; color: #fff; }
+.btn-red { background: linear-gradient(to bottom, #e57368, var(--red)); box-shadow: 0 4px 0 #6e1d15; color: #fff; }
+
+/* ---------- Stat bars ---------- */
+.bar { height: 18px; background: #111118; border: 2px solid #000; border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(to bottom, #f5a76c, var(--orange)); transition: width .6s ease; }
+.bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ---------- Flash messages ---------- */
+.message { padding: 10px 14px; margin-bottom: 18px; border-radius: 4px; font-weight: 600; text-align: center; border: 2px solid #000; }
+.message.success { background: var(--green); color: #fff; }
+.message.error { background: var(--orange); color: #0a0a0f; }
+
+/* ---------- Dashboard ---------- */
+.player-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 35px; flex-wrap: wrap; }
+.player-header h2 { color: var(--gold); font-size: 2.6rem; margin: 0; }
+.player-header .title-line { color: var(--muted); margin: 4px 0 0; font-weight: 600; }
+.player-header .xp-area { flex: 1; min-width: 220px; max-width: 360px; }
+.level-badge { text-align: center; }
+.level-badge .label { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+.level-badge .num { font-family: 'VT323', monospace; font-size: 3.4rem; color: var(--orange); line-height: 1; }
+
+.section-title { color: var(--gold); font-size: 2.1rem; margin: 0 0 15px; }
+
+.dungeon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px; }
+.dungeon-card {
+    display: block; text-decoration: none; text-align: center; color: inherit;
+    background: var(--panel); border: 2px solid #333; border-radius: 4px; padding: 22px 16px;
+    transition: all .25s ease;
+}
+.dungeon-card:hover { border-color: var(--orange); transform: translateY(-5px); box-shadow: 0 6px 18px rgba(231, 140, 91, 0.25); }
+.dungeon-icon { font-size: 3rem; }
+.dungeon-name { font-size: 1.8rem; color: #ece8c2; margin: 8px 0 4px; }
+.dungeon-meta { font-size: 0.85rem; color: var(--muted); }
+.dungeon-danger { letter-spacing: 3px; margin-top: 8px; }
+.add-dungeon { border: 2px dashed #555; background: rgba(10,10,15,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--muted); }
+.add-dungeon:hover { border-color: var(--gold); color: var(--gold); }
+.empty-note { color: var(--muted); grid-column: 1 / -1; font-style: italic; }
