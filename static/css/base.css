@@ -143,3 +143,25 @@ a:hover { color: #eedc9a; }
 .auth-box .subtitle { font-family: 'VT323', monospace; color: #ece8c2; font-size: 1.3rem; margin-bottom: 26px; }
 .auth-box .link-text { font-size: 0.9rem; margin-top: 24px; color: var(--muted); }
 .auth-box .btn { margin-top: 10px; }
+
+/* ---------- Forge / narrow pages ---------- */
+.narrow { max-width: 470px; margin: 0 auto; }
+.narrow h2 { text-align: center; }
+.back-link { display: block; text-align: center; margin-top: 18px; }
+
+/* ---------- Dungeon detail ---------- */
+.two-col { display: grid; grid-template-columns: 1fr 310px; gap: 30px; align-items: start; }
+@media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+.dungeon-title { color: var(--gold); font-size: 2.6rem; margin: 0 0 6px; }
+.dungeon-desc { color: var(--muted); margin: 0 0 12px; }
+.enemy-count { font-family: 'VT323', monospace; font-size: 1.6rem; color: var(--orange); }
+
+.bestiary-title { color: var(--orange); font-size: 2rem; margin: 24px 0 12px; }
+.enemy-list { display: flex; flex-direction: column; gap: 14px; }
+.enemy-card { background: #0a0a0f; border: 1px solid #333; border-left: 5px solid var(--orange); border-radius: 4px; padding: 14px 16px; }
+.enemy-card .tag { display: block; color: var(--orange); text-transform: uppercase; font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; }
+.enemy-card hr { border: 0; border-top: 1px dashed #333; margin: 10px 0; }
+.enemy-card .weak { color: #cfe8cf; }
+.side-stack { display: flex; flex-direction: column; gap: 20px; }
+.side-title { color: var(--gold); font-size: 1.8rem; margin: 0 0 14px; }
