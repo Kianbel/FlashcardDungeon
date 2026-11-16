@@ -28,7 +28,10 @@
     </div>
 
     <div class="side-stack">
-        <a href="{% url 'dungeon:start_run' deck.pk %}" class="btn btn-green" style="font-size: 2rem;">⚔️ Begin Run</a>
+        <form method="post" action="{% url 'dungeon:start_run' deck.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-green" style="font-size: 2rem;">⚔️ Begin Run</button>
+        </form>
 
         <div class="rpg-box">
             <h3 class="side-title">Spawn Enemy</h3>

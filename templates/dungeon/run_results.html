@@ -1,102 +1,41 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dungeon Cleared - Flashcard Dungeon</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap');
-        body { 
-            background-image: url("https://i.pinimg.com/1200x/0c/1d/7e/0c1d7edba1eaa4d58dd1bcf5aed1295c.jpg"); 
-            background-size: cover; 
-            background-attachment: fixed;
-            color: #e0e0e0; 
-            font-family: 'Inter', sans-serif; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .results-box { 
-            background: rgba(20, 20, 28, 0.95); 
-            border: 2px solid #f7d554; 
-            border-radius: 12px; 
-            padding: 40px; 
-            width: 450px; 
-            text-align: center;
-            box-shadow: 0 0 30px rgba(184, 151, 88, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
-        h1 { 
-            font-family: 'VT323', monospace; 
-            color: #f7d554; 
-            font-size: 4rem; 
-            margin: 0 0 10px 0; 
-        }
-        .xp-gain { 
-            font-family: 'VT323', monospace; 
-            color: #4CAF50; 
-            font-size: 3rem; 
-            margin: 20px 0; 
-            text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
-        }
-        .stat-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            text-align: left; 
-            background: #111118; 
-            padding: 20px; 
-            border-radius: 8px;
-            border: 1px solid #333;
-        }
-        .stat-grid strong { 
-            color: #e78c5b; 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
-        }
-        .btn { 
-            display: block; 
-            width: 100%; 
-            padding: 15px; 
-            background: linear-gradient(to bottom, #e78c5b, #f7d554); 
-            color: #0a0a0f; 
-            font-family: 'VT323', monospace; 
-            font-size: 1.8rem; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            box-sizing: border-box;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(247, 213, 84, 0.3);
-        }
-    </style>
-</head>
-<body>
-    <div class="results-box">
+{% extends "base.html" %}
+
+{% block title %}Dungeon Cleared - Flashcard Dungeon{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block body %}
+<main class="page-center">
+    <div class="rpg-box results">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
         <h1>Dungeon Cleared!</h1>
-        <p style="color: #8c8c9e; font-size: 1.2rem; margin-top: 0;">{{ session.deck.name }}</p>
-        
+        <p style="color: var(--muted); font-size: 1.2rem; margin: 0;">🏰 {{ session.deck.name }}</p>
+
+        <div class="rank">{{ rank }}</div>
+        <div class="rank-label">Dungeon Rank · {{ accuracy }}% recall</div>
+
         <div class="xp-gain">+{{ session.xp_earned }} XP</div>
-        
+
         <div class="stat-grid">
-            <div>
-                <strong>Enemies Slain</strong>
-                <div style="font-size: 2rem; font-family: 'VT323', monospace; color: #f7d554;">{{ session.enemies_killed }}</div>
-            </div>
-            <div>
-                <strong>Times Fled</strong>
-                <div style="font-size: 2rem; font-family: 'VT323', monospace; color: #f7d554;">{{ session.times_ran_away }}</div>
-            </div>
+            <div><strong>Slain</strong><div class="val">{{ session.enemies_killed }}</div></div>
+            <div><strong>Fled</strong><div class="val">{{ session.times_ran_away }}</div></div>
+            <div><strong>Level</strong><div class="val">{{ profile.level }}</div></div>
         </div>
-        
-        <a href="{% url 'home:home' %}" class="btn">Return to Guild</a>
+
+        <div style="margin-bottom: 22px;">
+            <div class="bar-label">
+                <span>Level {{ profile.level }}</span>
+                <span>{{ profile.current_xp }} / {{ xp_needed }} XP</span>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
+        </div>
+
+        <a href="{% url 'home:home' %}" class="btn">Return to Guild Hall</a>
     </div>
-</body>
-</html>
+</main>
+{% endblock %}

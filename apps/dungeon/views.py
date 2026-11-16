@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 from apps.profiles.models import Profile
+from django.views.decorators.http import require_POST
 
 # Ensure ALL models used in this file are imported here
 from .models import Deck, Card, StudySession, CardReview
@@ -46,74 +47,97 @@ def dungeon_detail_view(request, deck_id):
         'form': form,
     })
 
+MONSTERS = ["👹", "🐉", "🧟", "💀", "👻", "🕷️", "🦇", "🐺", "🧌", "🦂"]
+
+
 @login_required
+@require_POST
 def start_run_view(request, deck_id):
     deck = get_object_or_404(Deck, pk=deck_id, user=request.user)
-    
-    # Querying the Card model directly satisfies Pylance
-    if Card.objects.filter(deck=deck).count() == 0:
+
+    if not Card.objects.filter(deck=deck).exists():
         messages.error(request, "This dungeon is empty! Spawn enemies first.")
         return redirect('dungeon:dungeon_detail', deck_id=deck.pk)
-        
-    # Instantiate the adventure run
+
     session = StudySession.objects.create(user=request.user, deck=deck)
     return redirect('dungeon:review_run', session_id=session.pk)
+
 
 @login_required
 def review_run_view(request, session_id):
     session = get_object_or_404(StudySession, pk=session_id, user=request.user)
-    
-    # SAFETY CATCH: If the session already finished (like from a previous crash), immediately route to the loot screen.
+
+    # Already finished: go straight to the loot screen
     if session.ended_at:
         return redirect('dungeon:run_results', session_id=session.pk)
-    
-    # Querying CardReview directly avoids Pylance errors on session.reviews
+
     reviewed_card_ids = CardReview.objects.filter(session=session).values_list('card_id', flat=True)
-    
-    # Querying Card directly avoids Pylance errors on session.deck.cards
     next_card = Card.objects.filter(deck=session.deck).exclude(id__in=reviewed_card_ids).first()
-    
-    # If no cards are left, finalize the dungeon
+
+    # No cards left: finish the run and award XP
     if not next_card:
         session.ended_at = timezone.now()
-        
-        # Calculate XP (e.g., 15 XP per successful recall)
-        xp_gained = session.enemies_killed * 15
-        session.xp_earned = xp_gained
+        session.xp_earned = session.enemies_killed * 15
         session.save()
-        
-        # Safely fetch or create the profile
-        profile, created = Profile.objects.get_or_create(user=request.user)
-        
+
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        old_level = profile.level
         profile.total_cards_memorized += session.enemies_killed
-        profile.add_xp(xp_gained)
-        profile.save()
-            
+        profile.add_xp(session.xp_earned)  # add_xp saves the profile itself
+
+        if profile.level > old_level:
+            messages.success(request, f"⬆️ LEVEL UP! You reached level {profile.level}!")
+
         return redirect('dungeon:run_results', session_id=session.pk)
 
-    # Process the combat action
+    # Combat action
     if request.method == 'POST':
-        action = request.POST.get('action') # Expected values: 'kill' or 'run'
-        is_successful = (action == 'kill')
-        
-        # Record the individual strike
-        CardReview.objects.create(
-            session=session,
-            card=next_card,
-            is_successful=is_successful
-        )
-        
-        if is_successful:
-            session.enemies_killed += 1
-        else:
-            session.times_ran_away += 1
-            
-        session.save()
+        action = request.POST.get('action')  # 'kill' or 'run'
+        if action in ('kill', 'run'):
+            is_successful = (action == 'kill')
+            CardReview.objects.create(session=session, card=next_card, is_successful=is_successful)
+            if is_successful:
+                session.enemies_killed += 1
+            else:
+                session.times_ran_away += 1
+            session.save()
         return redirect('dungeon:review_run', session_id=session.pk)
 
-    return render(request, 'dungeon/review_card.html', {'session': session, 'card': next_card})
+    total = Card.objects.filter(deck=session.deck).count()
+    done = session.enemies_killed + session.times_ran_away
+    return render(request, 'dungeon/review_card.html', {
+        'session': session,
+        'card': next_card,
+        'monster': MONSTERS[next_card.pk % len(MONSTERS)],
+        'room_number': done + 1,
+        'total': total,
+        'progress_percent': int(done / total * 100) if total else 0,
+    })
+
 
 @login_required
 def run_results_view(request, session_id):
     session = get_object_or_404(StudySession, pk=session_id, user=request.user)
-    return render(request, 'dungeon/run_results.html', {'session': session})
+
+    total = session.enemies_killed + session.times_ran_away
+    accuracy = int(session.enemies_killed / total * 100) if total else 0
+    if accuracy == 100:
+        rank = "S"
+    elif accuracy >= 75:
+        rank = "A"
+    elif accuracy >= 50:
+        rank = "B"
+    else:
+        rank = "C"
+
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    xp_needed = profile.get_xp_for_next_level()
+
+    return render(request, 'dungeon/run_results.html', {
+        'session': session,
+        'accuracy': accuracy,
+        'rank': rank,
+        'profile': profile,
+        'xp_needed': xp_needed,
+        'progress_percent': int(profile.current_xp / xp_needed * 100) if xp_needed else 0,
+    })
