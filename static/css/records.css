@@ -1,0 +1,17 @@
+.records-wrap { max-width: 900px; margin: 0 auto; }
+.records-wrap h2 { font-family: var(--font-title); font-size: 36px; color: #5a1f12; margin-bottom: 4px; }
+.records-wrap .lead { font-style: italic; color: var(--ink-soft); margin-bottom: 16px; }
+.records { width: 100%; border-collapse: collapse; }
+.records th {
+    text-align: left;
+    font-family: var(--font-caps);
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--crimson);
+    border-bottom: 2px solid #5a3a1a;
+    padding: 6px 8px;
+}
+.records td { padding: 8px; border-bottom: 1px dashed #8a6a3a; vertical-align: top; overflow-wrap: anywhere; white-space: pre-wrap; }
+.sql-box { margin-top: 20px; background: #1a0f08; border: 2px solid #4a2e17; color: var(--gold); padding: 8px 12px; }
+.sql-box summary { cursor: pointer; font-family: var(--font-caps); }
+.sql-box pre { margin: 8px 0 0; white-space: pre-wrap; word-break: break-word; font-size: 13px; color: #f0dca8; }

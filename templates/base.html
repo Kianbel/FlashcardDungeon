@@ -18,6 +18,8 @@
         </a>
         <nav class="hang-nav">
             <div><a class="hang-link" href="{% url 'home:home' %}">Bounty Board</a></div>
+            <div><a class="hang-link" href="{% url 'dungeon:run_history' %}">Chronicle</a></div>
+            <div><a class="hang-link" href="{% url 'dungeon:cursed_foes' %}">Cursed Foes</a></div>
             <div><a class="hang-link" href="{% url 'profiles:profiles' %}">Ledger</a></div>
             <div><a class="hang-link" href="{% url 'user_settings:user_settings' %}">Quarters</a></div>
             <form method="post" action="{% url 'login:logout' %}">

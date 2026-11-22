@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cursed Foes - Flashcard Dungeon{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/records.css' %}">{% endblock %}
+
+{% block content %}
+<div class="parchment records-wrap">
+    <h2>Cursed Foes</h2>
+    <p class="lead">Monsters you have fled from at least once. Time to study their weaknesses.</p>
+
+    <table class="records">
+        <tr>
+            <th>Monster (question)</th>
+            <th>Weakness (answer)</th>
+        </tr>
+        {% for card in cards %}
+        <tr>
+            <td>{{ card.front_text }}</td>
+            <td>{{ card.back_text }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2" class="italic soft">You have never fled. Impressive.</td></tr>
+        {% endfor %}
+    </table>
+
+    {% if sql %}
+    <details class="sql-box"><summary>Generated SQL (SUBQUERY)</summary><pre>{{ sql }}</pre></details>
+    {% endif %}
+
+    <a class="back-link" href="{% url 'home:home' %}">Back to the tavern</a>
+</div>
+{% endblock %}

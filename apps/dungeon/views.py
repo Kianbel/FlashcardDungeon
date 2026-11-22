@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Subquery
 from django.utils import timezone
 from django.contrib import messages
 from apps.profiles.models import Profile
@@ -146,4 +148,44 @@ def run_results_view(request, session_id):
         'profile': profile,
         'xp_needed': xp_needed,
         'progress_percent': int(profile.current_xp / xp_needed * 100) if xp_needed else 0,
+    })
+
+
+# ---------------------------------------------------------------------------
+# ACTIVITY 1: SQL JOIN
+# StudySession (many) --> Deck (one), joined on study_session.deck_id = deck.id
+# ---------------------------------------------------------------------------
+@login_required
+def run_history_view(request):
+    sessions = (
+        StudySession.objects
+        .filter(user=request.user, ended_at__isnull=False)
+        .select_related('deck')          # <-- the JOIN
+        .order_by('-ended_at')
+    )
+    return render(request, 'dungeon/run_history.html', {
+        'sessions': sessions,
+        'sql': str(sessions.query) if settings.DEBUG else None,
+    })
+
+
+# ---------------------------------------------------------------------------
+# ACTIVITY 2: SQL SUBQUERY
+# Outer query: cards. Inner query: card ids the user has fled at least once.
+# ---------------------------------------------------------------------------
+@login_required
+def cursed_foes_view(request):
+    fled_card_ids = (
+        CardReview.objects
+        .filter(session__user=request.user, is_successful=False)
+        .values('card_id')               # inner query
+    )
+    cards = (
+        Card.objects
+        .filter(id__in=Subquery(fled_card_ids))   # outer query uses the inner one
+        .order_by('-updated_at')
+    )
+    return render(request, 'dungeon/cursed_foes.html', {
+        'cards': cards,
+        'sql': str(cards.query) if settings.DEBUG else None,
     })

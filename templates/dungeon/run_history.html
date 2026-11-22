@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chronicle - Flashcard Dungeon{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/records.css' %}">{% endblock %}
+
+{% block content %}
+<div class="parchment records-wrap">
+    <h2>The Chronicle</h2>
+    <p class="lead">Every dungeon run you have completed, with the dungeon it was fought in.</p>
+
+    <table class="records">
+        <tr>
+            <th>Dungeon</th>
+            <th>Slain</th>
+            <th>Fled</th>
+            <th>XP</th>
+            <th>Finished</th>
+        </tr>
+        {% for s in sessions %}
+        <tr>
+            <td>{{ s.deck.name }}</td>
+            <td>{{ s.enemies_killed }}</td>
+            <td>{{ s.times_ran_away }}</td>
+            <td>{{ s.xp_earned }}</td>
+            <td>{{ s.ended_at|date:"M d, Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="italic soft">No runs yet. Accept a bounty and descend!</td></tr>
+        {% endfor %}
+    </table>
+
+    {% if sql %}
+    <details class="sql-box"><summary>Generated SQL (JOIN)</summary><pre>{{ sql }}</pre></details>
+    {% endif %}
+
+    <a class="back-link" href="{% url 'home:home' %}">Back to the tavern</a>
+</div>
+{% endblock %}
