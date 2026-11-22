@@ -1,64 +1,49 @@
 {% extends "base.html" %}
+{% load theme_tags %}
 
-{% block title %}Profile - Flashcard Dungeon{% endblock %}
+{% block title %}Ledger - Flashcard Dungeon{% endblock %}
 
 {% block content %}
 <div class="stack">
-    <div class="rpg-box">
-        <h2>🛡️ Adventurer Stats</h2>
+    <section class="parchment">
+        <h2>Adventurer Stats</h2>
 
-        <div class="stat-row">
-            <span class="stat-label">Name</span>
-            <span>{{ user.username }}</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Equipped Title</span>
-            <span>⚜️ {{ profile.equipped_title.name|default:"Novice Explorer" }}</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Enemies Defeated (Recalls)</span>
-            <span>{{ profile.total_cards_memorized }}</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Dungeons Conquered</span>
-            <span>{{ runs_completed }}</span>
-        </div>
+        <div class="stat-row"><span class="stat-label">Name</span><span>{{ user.username }}</span></div>
+        <div class="stat-row"><span class="stat-label">Equipped Title</span><span>{{ profile.equipped_title.name|default:"Novice Explorer" }}</span></div>
+        <div class="stat-row"><span class="stat-label">Rank</span><span class="ledger-rank">{{ profile.level|roman }}</span></div>
+        <div class="stat-row"><span class="stat-label">Foes Slain (Recalls)</span><span>{{ profile.total_cards_memorized }}</span></div>
+        <div class="stat-row"><span class="stat-label">Dungeons Conquered</span><span>{{ runs_completed }}</span></div>
 
-        <div style="margin-top: 20px;">
-            <div class="bar-label">
-                <span>Level {{ profile.level }} Progress</span>
-                <span>{{ profile.current_xp }} / {{ xp_needed }} XP</span>
-            </div>
+        <div style="margin-top: 18px;">
+            <div class="bar-label"><span>Rank {{ profile.level|roman }} progress</span><span>{{ profile.current_xp }} / {{ xp_needed }} XP</span></div>
             <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
         </div>
-    </div>
+    </section>
 
-    <div class="rpg-box">
-        <h2>🏆 Unlocked Titles</h2>
-        <p style="color: var(--muted); font-size: 0.9rem; margin: 0;">Gain XP to unlock exclusive titles!</p>
+    <section class="parchment">
+        <h2>Titles Earned</h2>
+        <p class="italic soft">Gain XP to earn exclusive titles.</p>
 
         <div class="titles-grid">
             {% for title in unlocked_titles %}
-                <div class="title-badge unlocked {% if profile.equipped_title_id == title.id %}equipped{% endif %}" title="{{ title.description }}">
-                    {{ title.name }}
-                </div>
+                <div class="title-badge {% if profile.equipped_title_id == title.id %}equipped{% endif %}" title="{{ title.description }}">{{ title.name }}</div>
             {% empty %}
-                <p class="empty-note">No titles unlocked yet. Keep running dungeons to level up!</p>
+                <p class="italic soft" style="grid-column: 1 / -1;">No titles yet. Clear dungeons to rank up.</p>
             {% endfor %}
         </div>
 
         {% if unlocked_titles %}
         <form method="post" action="{% url 'profiles:equip_title' %}" class="equip-form">
             {% csrf_token %}
-            <select name="title_id">
-                <option value="">-- Select a Title to Equip --</option>
+            <select name="title_id" aria-label="Title to equip">
+                <option value="">-- Choose a title --</option>
                 {% for title in unlocked_titles %}
                     <option value="{{ title.id }}" {% if profile.equipped_title_id == title.id %}selected{% endif %}>{{ title.name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="btn">Equip</button>
+            <button type="submit" class="btn-wood">Equip</button>
         </form>
         {% endif %}
-    </div>
+    </section>
 </div>
 {% endblock %}

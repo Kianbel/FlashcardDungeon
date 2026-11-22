@@ -1,41 +1,49 @@
-{% extends "base.html" %}
+{% extends "dungeon_base.html" %}
+{% load theme_tags %}
 
-{% block title %}Dungeon Cleared - Flashcard Dungeon{% endblock %}
+{% block title %}Chamber Cleared - Flashcard Dungeon{% endblock %}
 
-{% block nav %}{% endblock %}
+{% block content %}
+<div class="results-wrap">
+    <h1 class="results-title">Chamber Cleared!</h1>
+    <div class="italic" style="color: #d3e0b8;">{{ session.deck.name }}</div>
 
-{% block body %}
-<main class="page-center">
-    <div class="rpg-box results">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        <h1>Dungeon Cleared!</h1>
-        <p style="color: var(--muted); font-size: 1.2rem; margin: 0;">🏰 {{ session.deck.name }}</p>
-
-        <div class="rank">{{ rank }}</div>
-        <div class="rank-label">Dungeon Rank · {{ accuracy }}% recall</div>
-
-        <div class="xp-gain">+{{ session.xp_earned }} XP</div>
-
-        <div class="stat-grid">
-            <div><strong>Slain</strong><div class="val">{{ session.enemies_killed }}</div></div>
-            <div><strong>Fled</strong><div class="val">{{ session.times_ran_away }}</div></div>
-            <div><strong>Level</strong><div class="val">{{ profile.level }}</div></div>
+    <div class="results-row">
+        <svg viewBox="0 0 250 190" role="img" aria-label="Open treasure chest overflowing with gold">
+            <path d="M34 92L52 26H198L216 92Z" fill="#6b4423" stroke="#1a0f08" stroke-width="4"/>
+            <path d="M70 26L62 92M180 26L188 92" stroke="#2a2018" stroke-width="7"/>
+            <path d="M40 94C70 40 180 40 210 94Z" fill="#e8c872"/>
+            <g fill="#f6dc8a" stroke="#a97a1f" stroke-width="1.5">
+                <circle cx="90" cy="70" r="9"/><circle cx="118" cy="58" r="9"/><circle cx="148" cy="64" r="9"/><circle cx="170" cy="78" r="9"/><circle cx="68" cy="84" r="8"/>
+            </g>
+            <rect x="28" y="92" width="194" height="82" fill="#5a3a1a" stroke="#1a0f08" stroke-width="4"/>
+            <rect x="68" y="92" width="14" height="82" fill="#2a2018"/>
+            <rect x="168" y="92" width="14" height="82" fill="#2a2018"/>
+            <rect x="108" y="108" width="34" height="34" fill="#b8862e" stroke="#1a0f08" stroke-width="3"/>
+            <circle cx="125" cy="123" r="5" fill="#1a0f08"/>
+            <path d="M40 40L44 52L56 56L44 60L40 72L36 60L24 56L36 52Z" fill="#fff4cf"/>
+            <path d="M214 30L217 38L225 41L217 44L214 52L211 44L203 41L211 38Z" fill="#fff4cf"/>
+        </svg>
+        <div>
+            <div class="rank-seal">{{ rank }}</div>
+            <div class="rank-label">Dungeon Rank - {{ accuracy }}% recall</div>
         </div>
+    </div>
 
-        <div style="margin-bottom: 22px;">
-            <div class="bar-label">
-                <span>Level {{ profile.level }}</span>
-                <span>{{ profile.current_xp }} / {{ xp_needed }} XP</span>
-            </div>
+    <div class="xp-gain">+{{ session.xp_earned }} XP</div>
+
+    <section class="parchment results-panel">
+        <div class="result-stats">
+            <div><div class="caps crimson" style="font-size: 13px;">Slain</div><div class="num">{{ session.enemies_killed }}</div></div>
+            <div><div class="caps crimson" style="font-size: 13px;">Fled</div><div class="num">{{ session.times_ran_away }}</div></div>
+            <div><div class="caps crimson" style="font-size: 13px;">Rank</div><div class="num">{{ profile.level|roman }}</div></div>
+        </div>
+        <div>
+            <div class="bar-label"><span>Experience</span><span>{{ profile.current_xp }} / {{ xp_needed }}</span></div>
             <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
         </div>
+    </section>
 
-        <a href="{% url 'home:home' %}" class="btn">Return to Guild Hall</a>
-    </div>
-</main>
+    <a href="{% url 'home:home' %}" class="btn-wood">Return to the Tavern</a>
+</div>
 {% endblock %}

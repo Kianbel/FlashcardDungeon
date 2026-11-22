@@ -1,46 +1,62 @@
 {% extends "base.html" %}
+{% load theme_tags %}
 
-{% block title %}Guild Hall - Flashcard Dungeon{% endblock %}
+{% block title %}The Tavern - Flashcard Dungeon{% endblock %}
 
 {% block content %}
-<section class="rpg-box player-header">
-    <div>
-        <h2>{{ user.username }}</h2>
-        <p class="title-line">⚜️ {{ profile.equipped_title.name|default:"Novice Explorer" }}</p>
-    </div>
+<div class="tavern-layout">
+    <aside class="ledger-col">
+        <section class="parchment ledger">
+            <div class="caps crimson">Adventurer's Ledger</div>
+            <div class="title-script big">{{ user.username }}</div>
+            <div class="italic soft">{{ profile.equipped_title.name|default:"Novice Explorer" }}</div>
+            <div class="ledger-rows">
+                <div><span>Rank</span><span class="ledger-rank">{{ profile.level|roman }}</span></div>
+                <div><span>Bounties cleared</span><span>{{ runs_completed }}</span></div>
+                <div><span>Foes slain</span><span>{{ profile.total_cards_memorized }}</span></div>
+            </div>
+            <div>
+                <div class="bar-label"><span>Experience</span><span>{{ profile.current_xp }} / {{ xp_needed }}</span></div>
+                <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
+            </div>
+        </section>
 
-    <div class="xp-area">
-        <div class="bar-label">
-            <span>XP</span>
-            <span>{{ profile.current_xp }} / {{ xp_needed }}</span>
+        <div class="barkeep">
+            <svg viewBox="0 0 48 52" role="img" aria-label="Tankard of ale">
+                <path d="M8 12 H34 L32 46 H10 Z" fill="#b8862e" stroke="#4a2e17" stroke-width="2.5"/>
+                <path d="M34 18 C46 18 46 38 33 38" fill="none" stroke="#b8862e" stroke-width="4"/>
+                <path d="M8 12 C8 4 16 4 18 8 C22 2 30 4 34 12 Z" fill="#f3e9c8"/>
+                <path d="M14 22 H30 M14 30 H30" stroke="#4a2e17" stroke-width="2"/>
+            </svg>
+            <div>"Welcome back, {{ user.username }}. {{ decks|length }} bount{{ decks|length|pluralize:"y,ies" }} posted, and the ale is cold."</div>
         </div>
-        <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
-    </div>
+    </aside>
 
-    <div class="level-badge">
-        <div class="label">Level</div>
-        <div class="num">{{ profile.level }}</div>
-    </div>
-</section>
+    <section class="board">
+        <h2 class="board-title">Bounty Board</h2>
+        <div class="poster-grid">
+            {% for deck in decks %}
+            <article class="poster {% cycle 'tilt-1' 'tilt-2' 'tilt-3' 'tilt-4' %}{% if deck.runs_done %} cleared{% endif %}">
+                <div class="poster-head">Wanted</div>
+                <div class="poster-name">{{ deck.name }}</div>
+                <div class="poster-stats">
+                    <div><span>Foes within</span><span>{{ deck.card_total }}</span></div>
+                    <div><span>Threat</span><span class="crimson">{{ deck.card_total|threat }}</span></div>
+                    <div><span>Bounty</span><span>{{ deck.card_total|bounty }} XP</span></div>
+                </div>
+                {% if deck.runs_done %}<div class="stamp">Cleared</div>{% endif %}
+                <a class="btn-wood" href="{% url 'dungeon:dungeon_detail' deck.pk %}">{% if deck.runs_done %}Hunt Again{% else %}Accept Bounty{% endif %}</a>
+            </article>
+            {% empty %}
+            <p class="empty-note" style="grid-column: 1 / -1; color: #f3e3b8; font-style: italic;">The board is bare. Post the first bounty!</p>
+            {% endfor %}
 
-<h2 class="section-title">Available Dungeons</h2>
-<div class="dungeon-grid">
-    {% for deck in decks %}
-    <a href="{% url 'dungeon:dungeon_detail' deck.pk %}" class="dungeon-card">
-        <div class="dungeon-icon">🦇</div>
-        <h3 class="dungeon-name">{{ deck.name }}</h3>
-        <div class="dungeon-meta">👹 {{ deck.card_total }} enem{{ deck.card_total|pluralize:"y,ies" }}</div>
-        <div class="dungeon-danger">
-            {% if deck.card_total >= 20 %}💀💀💀{% elif deck.card_total >= 10 %}💀💀{% else %}💀{% endif %}
+            <a class="poster-new" href="{% url 'dungeon:forge_dungeon' %}">
+                <div class="plus">+</div>
+                <div class="caps" style="font-size: 20px;">Post a new bounty</div>
+                <div class="italic" style="font-size: 15px;">Forge your own dungeon</div>
+            </a>
         </div>
-    </a>
-    {% empty %}
-    <p class="empty-note">You haven't forged any dungeons yet. The darkness awaits...</p>
-    {% endfor %}
-
-    <a href="{% url 'dungeon:forge_dungeon' %}" class="dungeon-card add-dungeon">
-        <div style="font-size: 3rem;">+</div>
-        <h3 class="pixel" style="font-size: 1.5rem; margin: 0;">Forge New Dungeon</h3>
-    </a>
+    </section>
 </div>
 {% endblock %}

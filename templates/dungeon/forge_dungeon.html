@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}Forge Dungeon - Flashcard Dungeon{% endblock %}
+{% block title %}Post a Bounty - Flashcard Dungeon{% endblock %}
 
 {% block content %}
-<div class="rpg-box narrow">
-    <h2 class="section-title">🔨 Forge New Dungeon</h2>
+<div class="parchment narrow">
+    <h2>Post a New Bounty</h2>
 
     <form method="post">
         {% csrf_token %}
-        <div class="form-group">
+        <div class="field">
             <label for="{{ form.name.id_for_label }}">Dungeon Name</label>
             {{ form.name }}
-            {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+            {% for error in form.name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
         </div>
-        <div class="form-group">
-            <label for="{{ form.description.id_for_label }}">Description (Optional)</label>
+        <div class="field">
+            <label for="{{ form.description.id_for_label }}">Description (optional)</label>
             {{ form.description }}
-            {% for error in form.description.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+            {% for error in form.description.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
         </div>
-        <button type="submit" class="btn">Establish Dungeon</button>
+        <button type="submit" class="btn-wood">Forge the Dungeon</button>
     </form>
 
-    <a href="{% url 'home:home' %}" class="back-link">← Return to Guild Hall</a>
+    <a class="back-link" href="{% url 'home:home' %}">Back to the tavern</a>
 </div>
 {% endblock %}

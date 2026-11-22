@@ -5,35 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Flashcard Dungeon{% endblock %}</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Pirata+One&display=swap">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="tavern">
     {% block nav %}
-    <nav class="guild-nav">
-        <h1 class="nav-logo"><a href="{% url 'home:home' %}">⚔️ Flashcard Dungeon</a></h1>
-        <div class="nav-links">
-            <a href="{% url 'home:home' %}">Guild Hall</a>
-            <a href="{% url 'profiles:profiles' %}">Profile</a>
-            <a href="{% url 'user_settings:user_settings' %}">Settings</a>
-            <form method="post" action="{% url 'login:logout' %}" style="margin:0;">
+    <header class="tavern-header">
+        <a class="sign-plank" href="{% url 'home:home' %}">
+            <span class="sign-title">Flashcard Dungeon</span>
+            <span class="sign-sub">Adventurers' Tavern and Bounty Hall</span>
+        </a>
+        <nav class="hang-nav">
+            <div><a class="hang-link" href="{% url 'home:home' %}">Bounty Board</a></div>
+            <div><a class="hang-link" href="{% url 'profiles:profiles' %}">Ledger</a></div>
+            <div><a class="hang-link" href="{% url 'user_settings:user_settings' %}">Quarters</a></div>
+            <form method="post" action="{% url 'login:logout' %}">
                 {% csrf_token %}
-                <button type="submit">Logout</button>
+                <button type="submit" class="hang-link danger">Leave Tavern</button>
             </form>
-        </div>
-    </nav>
+        </nav>
+    </header>
     {% endblock %}
 
     {% block body %}
-    <main class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    <main class="page">
+        {% include "partials/messages.html" %}
         {% block content %}{% endblock %}
     </main>
+    <footer class="tavern-footer">House rule: no flashcard is left behind, and no tab is left unpaid.</footer>
     {% endblock %}
 </body>
 </html>

@@ -1,55 +1,69 @@
-{% extends "base.html" %}
+{% extends "dungeon_base.html" %}
 
 {% block title %}{{ deck.name }} - Flashcard Dungeon{% endblock %}
 
 {% block content %}
-<div class="two-col">
+<section class="iron-plaque plaque-row">
     <div>
-        <div class="rpg-box">
-            <h2 class="dungeon-title">{{ deck.name }}</h2>
-            <p class="dungeon-desc">{{ deck.description|default:"No description provided." }}</p>
-            <div class="enemy-count">👹 Enemy Count: {{ cards|length }}</div>
-        </div>
+        <div class="plaque-name">{{ deck.name }}</div>
+        <div class="italic" style="color: #cfc8b0; margin-top: 4px;">{{ deck.description|default:"No description provided." }}</div>
+    </div>
+    <div style="text-align: right;" class="caps">
+        <div style="font-size: 20px; color: #d7cdb2;">Foes within: {{ cards|length }}</div>
+        <a href="{% url 'home:home' %}" style="font-size: 16px; text-decoration: none;">Return to the Tavern</a>
+    </div>
+</section>
 
-        <h3 class="bestiary-title">📜 Bestiary (Cards)</h3>
-        <div class="enemy-list">
-            {% for card in cards %}
-                <div class="enemy-card">
-                    <span class="tag">Monster (Front)</span>
-                    {{ card.front_text }}
-                    <hr>
-                    <span class="tag">Weakness (Back)</span>
-                    <span class="weak">{{ card.back_text }}</span>
-                </div>
-            {% empty %}
-                <p class="empty-note">The dungeon is empty. Spawn some enemies!</p>
-            {% endfor %}
-        </div>
+<div class="entrance">
+    <div class="entrance-main">
+        <h2 class="section-title">Bestiary</h2>
+        {% for card in cards %}
+        <article class="tablet">
+            <div class="tablet-label">Monster</div>
+            <div class="tablet-text">{{ card.front_text }}</div>
+            <hr>
+            <div class="tablet-label weak">Weakness</div>
+            <div class="tablet-text" style="color: #d3e8c4;">{{ card.back_text }}</div>
+        </article>
+        {% empty %}
+        <p class="empty-note">The dungeon is empty. Spawn some enemies!</p>
+        {% endfor %}
     </div>
 
-    <div class="side-stack">
+    <aside class="entrance-side">
+        <div class="doorway">
+            <svg viewBox="0 0 200 170" role="img" aria-label="Dark dungeon doorway with glowing eyes">
+                <path d="M10 170V70A90 90 0 0 1 190 70V170Z" fill="#2c312c" stroke="#121612" stroke-width="4"/>
+                <path d="M40 170V80A60 60 0 0 1 160 80V170Z" fill="#050707"/>
+                <path d="M88 4H112L108 24H92Z" fill="#3a423a" stroke="#121612" stroke-width="2"/>
+                <path d="M10 70A90 90 0 0 1 60 -4" fill="none" stroke="#5f9a3a" stroke-width="7" opacity="0.8"/>
+                <g fill="#e8d34a"><ellipse cx="86" cy="128" rx="5" ry="2.5"/><ellipse cx="108" cy="128" rx="5" ry="2.5"/></g>
+                <path d="M40 170V150M160 170V150" stroke="#5f9a3a" stroke-width="5"/>
+            </svg>
+        </div>
+
         <form method="post" action="{% url 'dungeon:start_run' deck.pk %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-green" style="font-size: 2rem;">⚔️ Begin Run</button>
+            <button type="submit" class="btn-green descend">Descend into the Dungeon</button>
         </form>
 
-        <div class="rpg-box">
-            <h3 class="side-title">Spawn Enemy</h3>
+        <section class="parchment" style="padding: 16px 18px;">
+            <h3 class="title-script" style="font-size: 28px; margin-bottom: 10px;">Spawn an Enemy</h3>
             <form method="post">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="{{ form.front_text.id_for_label }}">Monster (Question)</label>
+                <div class="field">
+                    <label for="{{ form.front_text.id_for_label }}">Monster (the question)</label>
                     {{ form.front_text }}
-                    {% for error in form.front_text.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                    {% for error in form.front_text.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.back_text.id_for_label }}">Weakness (Answer)</label>
+                <div class="field">
+                    <label for="{{ form.back_text.id_for_label }}">Weakness (the answer)</label>
                     {{ form.back_text }}
-                    {% for error in form.back_text.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                    {% for error in form.back_text.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
                 </div>
-                <button type="submit" class="btn">Add to Dungeon</button>
+                <button type="submit" class="btn-wood" style="font-size: 18px;">Add to Dungeon</button>
             </form>
-        </div>
-    </div>
+        </section>
+    </aside>
 </div>
 {% endblock %}

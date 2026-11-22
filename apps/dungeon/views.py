@@ -47,7 +47,11 @@ def dungeon_detail_view(request, deck_id):
         'form': form,
     })
 
-MONSTERS = ["👹", "🐉", "🧟", "💀", "👻", "🕷️", "🦇", "🐺", "🧌", "🦂"]
+MONSTERS = [
+    ("spider", "A Giant Cave Spider drops from the ceiling!"),
+    ("skull", "A Restless Skull rattles out of the dark!"),
+    ("bat", "A Cave Bat swoops down at you!"),
+]
 
 
 @login_required
@@ -103,12 +107,14 @@ def review_run_view(request, session_id):
             session.save()
         return redirect('dungeon:review_run', session_id=session.pk)
 
+    monster_kind, monster_caption = MONSTERS[next_card.pk % len(MONSTERS)]
     total = Card.objects.filter(deck=session.deck).count()
     done = session.enemies_killed + session.times_ran_away
     return render(request, 'dungeon/review_card.html', {
         'session': session,
         'card': next_card,
-        'monster': MONSTERS[next_card.pk % len(MONSTERS)],
+        'monster_kind': monster_kind,
+        'monster_caption': monster_caption,
         'room_number': done + 1,
         'total': total,
         'progress_percent': int(done / total * 100) if total else 0,

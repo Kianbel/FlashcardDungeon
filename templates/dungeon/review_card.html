@@ -1,59 +1,98 @@
-{% extends "base.html" %}
+{% extends "dungeon_base.html" %}
+{% load theme_tags %}
 
 {% block title %}Combat - {{ session.deck.name }}{% endblock %}
 
-{% block nav %}{% endblock %}
-
-{% block body %}
-<main class="page-center">
-    <div class="rpg-box combat">
-        <div class="combat-top">
-            <span class="dname">🏰 {{ session.deck.name }}</span>
-            <a href="{% url 'dungeon:dungeon_detail' session.deck.pk %}"
-               onclick="return confirm('Abandon this run? Progress so far is not rewarded.')">Leave dungeon</a>
+{% block content %}
+<div class="arena">
+    <section class="iron-plaque">
+        <div class="plaque-row" style="gap: 12px;">
+            <span class="plaque-name" style="font-size: 30px;">{{ session.deck.name }}</span>
+            <span class="caps" style="font-size: 17px; color: #d7cdb2;">Chamber {{ room_number|roman }} of {{ total|roman }}</span>
         </div>
-
-        <div class="bar-label">
-            <span>Room {{ room_number }} of {{ total }}</span>
-            <span>{{ progress_percent }}% cleared</span>
+        <div class="bar" style="margin-top: 8px;"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
+        <div class="plaque-stats">
+            <span>Slain: {{ session.enemies_killed }}</span>
+            <a href="{% url 'dungeon:dungeon_detail' session.deck.pk %}" style="text-decoration: none;"
+               onclick="return confirm('Abandon this run? Progress so far is not rewarded.')">Flee the dungeon</a>
+            <span>Fled: {{ session.times_ran_away }}</span>
         </div>
-        <div class="bar"><div class="bar-fill" style="width: {{ progress_percent }}%;"></div></div>
+    </section>
 
-        <div class="combat-stats">
-            <span>⚔️ Slain: {{ session.enemies_killed }}</span>
-            <span>🏃 Fled: {{ session.times_ran_away }}</span>
-        </div>
-
-        <div class="monster" id="monster">{{ monster }}</div>
-
-        <!-- Both faces are rendered by Django (auto-escaped); JS only toggles visibility -->
-        <div class="card-face" id="frontFace">
-            <span class="face-label">A wild monster appears!</span>
-            {{ card.front_text }}
-        </div>
-        <div class="card-face weakness" id="backFace" hidden>
-            <span class="face-label">Weakness exposed</span>
-            {{ card.back_text }}
-        </div>
-
-        <button type="button" class="btn" id="revealBtn">🔍 Expose Weakness (Flip)</button>
-
-        <div class="action-row" id="actionRow" hidden>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="kill">
-                <button type="submit" class="btn btn-green">⚔️ Strike<br><small style="font-size:.9rem;">I knew it</small></button>
-            </form>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="run">
-                <button type="submit" class="btn btn-red">🏃 Flee<br><small style="font-size:.9rem;">I forgot</small></button>
-            </form>
-        </div>
-
-        <div class="hint">Keyboard: Space = flip · K = strike · F = flee</div>
+    <div class="monster">
+        {% if monster_kind == "spider" %}
+        <svg viewBox="0 0 220 180" role="img" aria-label="A giant cave spider hanging from a thread">
+            <defs>
+                <g id="legs" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M95 66L52 34L24 62L14 104"/>
+                    <path d="M93 72L44 58L16 88L10 128"/>
+                    <path d="M93 78L42 88L20 118L18 152"/>
+                    <path d="M97 84L56 118L38 146L40 172"/>
+                </g>
+            </defs>
+            <path d="M110 0V40" stroke="#bdb7a5" stroke-width="1.5"/>
+            <use href="#legs" stroke="#8a7a62" stroke-width="8"/>
+            <use href="#legs" stroke="#1a130d" stroke-width="5"/>
+            <use href="#legs" stroke="#8a7a62" stroke-width="8" transform="translate(220 0) scale(-1 1)"/>
+            <use href="#legs" stroke="#1a130d" stroke-width="5" transform="translate(220 0) scale(-1 1)"/>
+            <ellipse cx="110" cy="112" rx="32" ry="38" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <ellipse cx="110" cy="72" rx="19" ry="15" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <path d="M110 92L122 112L110 132L98 112Z" fill="#b8321f"/>
+            <g fill="#ff6a4f"><circle cx="103" cy="66" r="2.6"/><circle cx="117" cy="66" r="2.6"/><circle cx="99" cy="72" r="2"/><circle cx="121" cy="72" r="2"/></g>
+            <path d="M104 84L102 94M116 84L118 94" stroke="#d9d2bd" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        {% elif monster_kind == "skull" %}
+        <svg viewBox="0 0 220 180" role="img" aria-label="A restless skull">
+            <path d="M110 0V30" stroke="#bdb7a5" stroke-width="1.5"/>
+            <path d="M110 30C68 30 46 58 48 92C49 110 60 120 70 128L70 152L150 152L150 128C160 120 171 110 172 92C174 58 152 30 110 30Z" fill="#cfc8b0" stroke="#1a130d" stroke-width="3"/>
+            <ellipse cx="88" cy="94" rx="17" ry="19" fill="#0d0a07"/>
+            <ellipse cx="132" cy="94" rx="17" ry="19" fill="#0d0a07"/>
+            <circle cx="88" cy="96" r="4" fill="#ff6a4f"/>
+            <circle cx="132" cy="96" r="4" fill="#ff6a4f"/>
+            <path d="M110 108L100 128L120 128Z" fill="#0d0a07"/>
+            <path d="M84 152V136M97 152V136M110 152V136M123 152V136M136 152V136" stroke="#1a130d" stroke-width="3"/>
+        </svg>
+        {% else %}
+        <svg viewBox="0 0 220 180" role="img" aria-label="A cave bat">
+            <path d="M92 92C60 40 20 50 6 92C26 86 38 100 44 118C58 102 76 106 92 120Z" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <path d="M128 92C160 40 200 50 214 92C194 86 182 100 176 118C162 102 144 106 128 120Z" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <ellipse cx="110" cy="104" rx="22" ry="34" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <circle cx="110" cy="64" r="17" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <path d="M97 52L92 32L106 46ZM123 52L128 32L114 46Z" fill="#1d1611" stroke="#8a7a62" stroke-width="2"/>
+            <g fill="#ff6a4f"><circle cx="103" cy="62" r="3"/><circle cx="117" cy="62" r="3"/></g>
+            <path d="M105 74L103 82M115 74L117 82" stroke="#d9d2bd" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        {% endif %}
+        <div class="monster-caption">{{ monster_caption }}</div>
     </div>
-</main>
+
+    <!-- Django renders and escapes both faces; JS only toggles visibility -->
+    <section class="tablet big" id="frontFace">
+        <div class="tablet-label">The foe demands an answer</div>
+        <div class="tablet-text">{{ card.front_text }}</div>
+    </section>
+    <section class="tablet big" id="backFace" hidden>
+        <div class="tablet-label weak">Weakness exposed</div>
+        <div class="tablet-text" style="color: #d3e8c4;">{{ card.back_text }}</div>
+    </section>
+
+    <button type="button" class="btn-wood" id="revealBtn">Reveal the Weakness</button>
+
+    <div class="action-row" id="actionRow" hidden>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="kill">
+            <button type="submit" class="btn-green">Strike<small>I knew it</small></button>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="run">
+            <button type="submit" class="btn-red">Retreat<small>I forgot</small></button>
+        </form>
+    </div>
+
+    <div class="hint">Space to reveal - K to strike - F to retreat</div>
+</div>
 
 <script>
     const revealBtn = document.getElementById('revealBtn');

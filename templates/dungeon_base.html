@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Flashcard Dungeon{% endblock %}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Pirata+One&display=swap">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="dungeon">
+    {% include "partials/dungeon_decor.html" %}
+    <main class="dungeon-main">
+        {% include "partials/messages.html" %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

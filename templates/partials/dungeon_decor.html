@@ -1,0 +1,70 @@
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+        <pattern id="bricks" width="160" height="80" patternUnits="userSpaceOnUse">
+            <rect width="160" height="80" fill="#262b26"/>
+            <rect x="2" y="2" width="76" height="36" fill="#2d332d"/>
+            <rect x="82" y="2" width="76" height="36" fill="#222722"/>
+            <rect x="-38" y="42" width="76" height="36" fill="#242a24"/>
+            <rect x="42" y="42" width="76" height="36" fill="#2c312c"/>
+            <rect x="122" y="42" width="76" height="36" fill="#232823"/>
+            <path d="M0 0H160M0 40H160M0 80H160M0 0V40M80 0V40M160 0V40M40 40V80M120 40V80" stroke="#0d100d" stroke-width="3" fill="none"/>
+        </pattern>
+        <symbol id="sym-web" viewBox="0 0 210 210">
+            <g fill="none" stroke="#d8d8cc" stroke-width="1" opacity="0.5">
+                <path d="M0 0L210 0M0 0L194 80M0 0L148 148M0 0L80 194M0 0L0 210"/>
+                <path d="M60 0L55 23L42 42L23 55L0 60"/>
+                <path d="M110 0L102 42L78 78L42 102L0 110"/>
+                <path d="M160 0L148 61L113 113L61 148L0 160"/>
+                <path d="M210 0L194 80L148 148L80 194L0 210"/>
+            </g>
+        </symbol>
+        <symbol id="sym-vine" viewBox="-16 0 32 230">
+            <path d="M0 0C-8 50 14 90 -2 150C-10 180 6 200 0 230" fill="none" stroke="#3f6b2a" stroke-width="4"/>
+            <ellipse cx="-9" cy="45" rx="9" ry="5" fill="#4f8a32"/>
+            <ellipse cx="9" cy="85" rx="9" ry="5" fill="#4f8a32"/>
+            <ellipse cx="-8" cy="125" rx="9" ry="5" fill="#5f9a3a"/>
+            <ellipse cx="8" cy="170" rx="9" ry="5" fill="#4f8a32"/>
+        </symbol>
+        <symbol id="sym-torch" viewBox="-20 -50 40 125">
+            <rect x="-6" y="0" width="12" height="70" fill="#2a2018" stroke="#0d0a07" stroke-width="2"/>
+            <path d="M-16 0L16 0L10 16L-10 16Z" fill="#3a2c20" stroke="#0d0a07" stroke-width="2"/>
+            <path d="M0 -46C16 -20 14 -4 0 0C-14 -4 -16 -20 0 -46Z" fill="#ffa733"/>
+            <path d="M0 -26C8 -12 7 -4 0 -2C-7 -4 -8 -12 0 -26Z" fill="#fff0b0"/>
+        </symbol>
+        <symbol id="sym-mini" viewBox="-18 -10 36 20">
+            <path d="M-4 -2L-12 -8L-16 -2M-5 0L-14 2L-16 8M4 -2L12 -8L16 -2M5 0L14 2L16 8" stroke="#8a7a62" stroke-width="1.6" fill="none"/>
+            <ellipse cx="0" cy="0" rx="5" ry="6.5" fill="#16110c" stroke="#8a7a62" stroke-width="1"/>
+        </symbol>
+    </defs>
+</svg>
+
+<svg class="dungeon-bg" aria-hidden="true">
+    <rect width="100%" height="100%" fill="url(#bricks)"/>
+    <ellipse cx="15%" cy="88%" rx="110" ry="24" fill="#4f7a30" opacity="0.35"/>
+    <ellipse cx="65%" cy="55%" rx="70" ry="20" fill="#4f7a30" opacity="0.3"/>
+    <ellipse cx="85%" cy="92%" rx="90" ry="22" fill="#5f8a38" opacity="0.3"/>
+    <ellipse cx="8%" cy="25%" rx="50" ry="30" fill="#4f7a30" opacity="0.3"/>
+</svg>
+<div class="dungeon-moss"></div>
+<div class="dungeon-vignette"></div>
+<div class="dungeon-glow glow-l"></div>
+<div class="dungeon-glow glow-r"></div>
+
+<svg class="decor web-tl" aria-hidden="true"><use href="#sym-web" width="100%" height="100%"/></svg>
+<svg class="decor web-tr" aria-hidden="true"><use href="#sym-web" width="100%" height="100%"/></svg>
+<svg class="decor vine vine-1" aria-hidden="true"><use href="#sym-vine" width="100%" height="100%"/></svg>
+<svg class="decor vine vine-2" aria-hidden="true"><use href="#sym-vine" width="100%" height="100%"/></svg>
+<svg class="decor vine vine-3" aria-hidden="true"><use href="#sym-vine" width="100%" height="100%"/></svg>
+<svg class="decor torch-l" aria-hidden="true"><use href="#sym-torch" width="100%" height="100%"/></svg>
+<svg class="decor torch-r" aria-hidden="true"><use href="#sym-torch" width="100%" height="100%"/></svg>
+
+<div class="hang" style="left: 12%; --len: 150px;" aria-hidden="true"><svg><use href="#sym-mini" width="100%" height="100%"/></svg></div>
+<div class="hang" style="left: 38%; --len: 70px;" aria-hidden="true"><svg><use href="#sym-mini" width="100%" height="100%"/></svg></div>
+<div class="hang" style="right: 14%; --len: 190px;" aria-hidden="true"><svg><use href="#sym-mini" width="100%" height="100%"/></svg></div>
+
+<svg class="decor eyes eyes-l" viewBox="0 0 40 10" aria-hidden="true"><g fill="#e8d34a"><ellipse cx="9" cy="5" rx="5" ry="2.5"/><ellipse cx="31" cy="5" rx="5" ry="2.5"/></g></svg>
+<svg class="decor eyes eyes-r" viewBox="0 0 40 10" aria-hidden="true"><g fill="#e8d34a"><ellipse cx="9" cy="5" rx="5" ry="2.5"/><ellipse cx="31" cy="5" rx="5" ry="2.5"/></g></svg>
+<svg class="decor centipede" viewBox="0 0 130 50" aria-hidden="true">
+    <path d="M10 30C40 5 65 55 120 28" stroke="#2a1c14" stroke-width="13" stroke-linecap="round" stroke-dasharray="2 7" fill="none"/>
+    <path d="M10 30C40 5 65 55 120 28" stroke="#a5532e" stroke-width="7" stroke-linecap="round" stroke-dasharray="9 3" fill="none"/>
+</svg>
