@@ -8,6 +8,7 @@ from .models import Profile, Title
 @login_required
 def profile_view(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
+    profile.check_title_unlocks()  # grants any titles the level already qualifies for
     xp_needed = profile.get_xp_for_next_level()
     progress_percent = int(profile.current_xp / xp_needed * 100) if xp_needed else 0
 
