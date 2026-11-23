@@ -471,3 +471,12 @@ body.dungeon a { color: var(--gold); }
 }
 .inline-form { display: inline; margin: 0; }
 .tablet-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+.plaque-back {
+    display: inline-block;
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px dashed #4a443b;
+    font-size: 16px;
+    text-decoration: none;
+}
