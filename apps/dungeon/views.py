@@ -148,7 +148,7 @@ def review_run_view(request, session_id):
         profile.add_xp(session.xp_earned)  # add_xp saves the profile itself
 
         if profile.level > old_level:
-            messages.success(request, f"⬆️ LEVEL UP! You reached level {profile.level}!")
+            messages.success(request, f"Rank up! You have reached Rank {profile.level}.")
 
         return redirect('dungeon:run_results', session_id=session.pk)
 
