@@ -131,13 +131,6 @@ Titles live in the `profiles_title` table, not in code. On a fresh database, add
 - The `dark_mode` and `email_notifications` fields exist in the `UserSettings` model but are not used by any screen.
 - Titles cannot yet be bought with XP; they unlock by level only.
 
-## Ideas for later
-
-- XP shop for buying titles
-- A "review only the cards I fled" run mode
-- Spaced repetition scheduling
-- Automated tests and deployment configuration
-
 ## Author
 
 Kianbel, IM2 Final Project
