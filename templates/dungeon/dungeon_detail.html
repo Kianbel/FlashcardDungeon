@@ -10,6 +10,14 @@
     </div>
     <div style="text-align: right;" class="caps">
         <div style="font-size: 20px; color: #d7cdb2;">Foes within: {{ cards|length }}</div>
+        <div class="tablet-actions" style="justify-content: flex-end;">
+            <a href="{% url 'dungeon:edit_deck' deck.pk %}" class="btn-wood btn-sm">Edit Dungeon</a>
+            <form method="post" action="{% url 'dungeon:delete_deck' deck.pk %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-red btn-sm"
+                        onclick="return confirm('Collapse this dungeon? All its enemies and its run history will be lost forever.')">Collapse Dungeon</button>
+            </form>
+        </div>
         <a href="{% url 'home:home' %}" style="font-size: 16px; text-decoration: none;">Return to the Tavern</a>
     </div>
 </section>
@@ -24,6 +32,14 @@
             <hr>
             <div class="tablet-label weak">Weakness</div>
             <div class="tablet-text" style="color: #d3e8c4;">{{ card.back_text }}</div>
+            <div class="tablet-actions">
+                <a href="{% url 'dungeon:edit_card' card.pk %}" class="btn-wood btn-sm">Edit</a>
+                <form method="post" action="{% url 'dungeon:delete_card' card.pk %}" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-red btn-sm"
+                            onclick="return confirm('Banish this enemy from the dungeon?')">Banish</button>
+                </form>
+            </div>
         </article>
         {% empty %}
         <p class="empty-note">The dungeon is empty. Spawn some enemies!</p>

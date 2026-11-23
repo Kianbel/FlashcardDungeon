@@ -49,6 +49,62 @@ def dungeon_detail_view(request, deck_id):
         'form': form,
     })
 
+
+# ---------------------------------------------------------------------------
+# Edit / delete: decks and cards (always scoped to the logged-in user)
+# ---------------------------------------------------------------------------
+@login_required
+def edit_deck_view(request, deck_id):
+    deck = get_object_or_404(Deck, pk=deck_id, user=request.user)
+
+    if request.method == 'POST':
+        form = DeckForm(request.POST, instance=deck)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'"{deck.name}" has been reforged!')
+            return redirect('dungeon:dungeon_detail', deck_id=deck.pk)
+    else:
+        form = DeckForm(instance=deck)
+
+    return render(request, 'dungeon/edit_deck.html', {'form': form, 'deck': deck})
+
+
+@login_required
+@require_POST
+def delete_deck_view(request, deck_id):
+    deck = get_object_or_404(Deck, pk=deck_id, user=request.user)
+    name = deck.name
+    deck.delete()  # cascades to cards, runs and reviews
+    messages.success(request, f'"{name}" has been collapsed and sealed forever.')
+    return redirect('home:home')
+
+
+@login_required
+def edit_card_view(request, card_id):
+    card = get_object_or_404(Card, pk=card_id, deck__user=request.user)
+
+    if request.method == 'POST':
+        form = CardForm(request.POST, instance=card)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'The enemy has been reshaped.')
+            return redirect('dungeon:dungeon_detail', deck_id=card.deck_id)
+    else:
+        form = CardForm(instance=card)
+
+    return render(request, 'dungeon/edit_card.html', {'form': form, 'card': card})
+
+
+@login_required
+@require_POST
+def delete_card_view(request, card_id):
+    card = get_object_or_404(Card, pk=card_id, deck__user=request.user)
+    deck_id = card.deck_id
+    card.delete()
+    messages.success(request, 'The enemy has been banished.')
+    return redirect('dungeon:dungeon_detail', deck_id=deck_id)
+
+
 MONSTERS = [
     ("spider", "A Giant Cave Spider drops from the ceiling!"),
     ("skull", "A Restless Skull rattles out of the dark!"),
@@ -119,7 +175,7 @@ def review_run_view(request, session_id):
         'monster_caption': monster_caption,
         'room_number': done + 1,
         'total': total,
-        'progress_percent': int(done / total * 100) if total else 0,
+        'progress_percent': min(100, int(done / total * 100)) if total else 0,
     })
 
 

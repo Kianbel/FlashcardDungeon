@@ -461,3 +461,13 @@ body.dungeon a { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) {
     .monster svg, .xp-gain { animation: none; }
 }
+
+/* ---------- Edit / delete controls ---------- */
+.btn-sm {
+    display: inline-block;
+    width: auto;
+    padding: 4px 14px;
+    font-size: 15px;
+}
+.inline-form { display: inline; margin: 0; }
+.tablet-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }

@@ -1,0 +1,26 @@
+{% extends "dungeon_base.html" %}
+
+{% block title %}Reshape Enemy - Flashcard Dungeon{% endblock %}
+
+{% block content %}
+<div class="parchment narrow" style="margin-top: 24px;">
+    <h2>Reshape the Enemy</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="{{ form.front_text.id_for_label }}">Monster (the question)</label>
+            {{ form.front_text }}
+            {% for error in form.front_text.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="field">
+            <label for="{{ form.back_text.id_for_label }}">Weakness (the answer)</label>
+            {{ form.back_text }}
+            {% for error in form.back_text.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <button type="submit" class="btn-wood">Save Changes</button>
+    </form>
+
+    <a class="back-link" href="{% url 'dungeon:dungeon_detail' card.deck_id %}">Cancel and return to the dungeon</a>
+</div>
+{% endblock %}
